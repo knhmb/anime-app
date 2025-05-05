@@ -1,0 +1,7 @@
+.main-layout {
+  padding: 1rem 2rem;
+
+  @media screen and (min-width: 1121px) {
+    padding: 1rem 12rem;
+  }
+}
