@@ -1,5 +1,5 @@
 const MainLayout = ({ children }) => {
-  return <div className="main-layout">{children}</div>;
+  return <main className="main-layout">{children}</main>;
 };
 
 export default MainLayout;

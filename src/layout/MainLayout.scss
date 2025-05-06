@@ -1,7 +1,10 @@
 .main-layout {
-  padding: 1rem 2rem;
+  padding: 1.5rem;
+  // width: 1200px;
+  margin: 0 auto;
 
-  @media screen and (min-width: 1121px) {
-    padding: 1rem 12rem;
+  @media screen and (min-width: 1230px) {
+    padding: 1.5rem 0;
+    width: 1220px;
   }
 }

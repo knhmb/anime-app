@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import SearchInput from "../components/SearchInput";
-import AnimeCard from "../components/AnimeCard";
+import SearchInput from "../components/search/SearchInput";
+import AnimeCard from "../components/cards/AnimeCard";
 import AnimePagination from "../components/AnimePagination";
-import LoadingSpinner from "../components/LoadingSpinner";
-import EmptyState from "../components/EmptyState";
+import LoadingSpinner from "../components/loading/LoadingSpinner";
+import EmptyState from "../components/empty-state/EmptyState";
 
 const Home = () => {
   const [animes, setAnimes] = useState([]);
@@ -64,6 +64,7 @@ const Home = () => {
             return (
               <AnimeCard
                 key={anime.mal_id}
+                id={anime.mal_id}
                 image={anime.images.jpg.image_url}
                 title={anime.title}
               />
