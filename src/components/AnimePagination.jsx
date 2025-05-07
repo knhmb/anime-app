@@ -4,8 +4,6 @@ import Stack from "@mui/material/Stack";
 
 const AnimePagination = ({ handlePageChange, totalPages, page }) => {
   const handleChange = (event, value) => {
-    console.log(event);
-
     handlePageChange(value);
   };
 

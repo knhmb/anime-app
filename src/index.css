@@ -1,6 +1,7 @@
 @import "./layout/MainLayout.scss";
 @import "./pages/Home.scss";
 @import "./pages/AnimeDetails.scss";
+@import "./pages/NotFound.scss";
 
 @import "@fontsource/roboto/300.css";
 @import "@fontsource/roboto/400.css";

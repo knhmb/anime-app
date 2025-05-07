@@ -4,76 +4,61 @@ import AnimeCard from "../components/cards/AnimeCard";
 import AnimePagination from "../components/AnimePagination";
 import LoadingSpinner from "../components/loading/LoadingSpinner";
 import EmptyState from "../components/empty-state/EmptyState";
+import useFetch from "../hooks/useFetch";
 
 const Home = () => {
-  const [animes, setAnimes] = useState([]);
-  const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const [loading, setLoading] = useState(false);
   const [query, setQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState("");
-
-  const fetchAnimes = async () => {
-    setLoading(true);
-    try {
-      const response = await fetch(
-        `https://api.jikan.moe/v4/anime?q=${query}&limit=10&page=${page}`
-      );
-      if (!response.ok)
-        throw new Error("Data Fetching has failed. Please try again later.");
-      const data = await response.json();
-      setAnimes(data.data);
-      setTotalPages(data.pagination.items.total);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const selectPage = (pageNum) => {
-    setPage(pageNum);
-  };
-
-  const handleQueryChange = (value) => {
-    setQuery(value);
-    setPage(1);
-  };
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedQuery(query);
     }, 500);
 
-    return () => {
-      clearTimeout(handler);
-    };
+    return () => clearTimeout(handler);
   }, [query]);
 
-  useEffect(() => {
-    fetchAnimes();
-  }, [page, debouncedQuery]);
+  const { data, loading, error } = useFetch(
+    `https://api.jikan.moe/v4/anime?q=${debouncedQuery}&limit=10&page=${page}`,
+    [debouncedQuery, page]
+  );
+
+  const animes = data?.data || [];
+  const totalPages = data?.pagination?.last_visible_page || 1;
+
+  const handleQueryChange = (value) => {
+    setQuery(value);
+    setPage(1);
+  };
+
+  const selectPage = (pageNum) => {
+    setPage(pageNum);
+  };
 
   return (
     <>
       <SearchInput handleQueryChange={handleQueryChange} />
       {loading && <LoadingSpinner />}
-      {!loading && animes.length > 0 && (
-        <div className="card-content">
-          {animes?.map((anime) => {
-            return (
-              <AnimeCard
-                key={anime.mal_id}
-                id={anime.mal_id}
-                image={anime.images.jpg.image_url}
-                title={anime.title}
-              />
-            );
-          })}
+      {!loading && error && (
+        <div className="error">
+          <p>{error}</p>
         </div>
       )}
-      {!loading && animes.length === 0 && <EmptyState />}
-      {!loading && (
+      {!loading && !error && animes.length > 0 && (
+        <div className="card-content">
+          {animes.map((anime) => (
+            <AnimeCard
+              key={anime.mal_id}
+              id={anime.mal_id}
+              image={anime.images.jpg.image_url}
+              title={anime.title}
+            />
+          ))}
+        </div>
+      )}
+      {!loading && !error && animes.length === 0 && <EmptyState />}
+      {!loading && animes.length > 0 && (
         <AnimePagination
           handlePageChange={selectPage}
           totalPages={totalPages}
